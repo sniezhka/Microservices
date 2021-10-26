@@ -1,0 +1,37 @@
+version: '3.8'
+
+services:
+ db:
+  image: mongo:5.0.3
+  ports:
+   - 27017:27017
+  volumes:
+   - ./mongo.data:/var/lib/mongodb/data/db
+  environment:
+      MONGO_INITDB_DATABASE: studentDB
+  restart: always
+
+ app1:
+  build: ./studentAppFirstName
+  ports:
+   - 8081:8081
+  environment:
+   SPRING_DATA_MONGODB_URI: mongodb://db:27017/studentDB
+  restart: always
+  links:
+   - db
+ app2:
+  build: ./studentAppMiddleName
+  environment:
+   SPRING_DATA_MONGODB_URI: mongodb://db:27017/studentDB
+  restart: always
+  links:
+   - db
+ app3:
+  build: ./studentAppLastName
+  environment:
+   SPRING_DATA_MONGODB_URI: mongodb://db:27017/studentDB
+  restart: always
+  links:
+   - db
+
